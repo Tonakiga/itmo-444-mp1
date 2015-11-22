@@ -11,6 +11,9 @@ git clone https://github.com/Tonakiga/itmo-444-images.git
 
 sudo mv ./itmo-444-application-setup/index.html /var/www/html
 sudo mv ./itmo-444-application-setup/page2.html /var/www/html
+sudo mv ./itmo-444-application-setup/index.php /var/www/html
+sudo mv ./itmo-444-application-setup/setup.php /var/www/html
+sudo mv ./itmo-444-application-setup/submit.html /var/www/html
 sudo mv ./itmo-444-images /var/www/images
 sudo mv ./itmo-444-application-setup/*.php
 

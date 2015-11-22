@@ -1,2 +1,2 @@
-# itmo-444-mp1
-ITMO 444 Mini Project 1 Directory
+# itmo-444-application-setup
+ITMO 444 ApplicationSetup Directory
