@@ -5,27 +5,39 @@
 
 <?php
 session_start();
+ini_set('display_errors',1); 
+error_reporting(E_ALL);
 $email = $_POST["email"];
 echo $email;
 require 'vendor/autoload.php';
-rds = new Aws\Rds\RdsClient([
-'version' => 'latest',
+
+use Aws\Rds\RdsClient;
+$client = RdsClient::factory(array(
 'region'  => 'us-east-1'
-]);
-$result = s3$->describeDBInstances([
-    'DBInstanceIdentifier' => 'mp1-cjs-db',
-]);
-$endpoint = $result['dbInstances'][0]['Endpoint']['Address'];
+));
+
+$result = $client->describeDBInstances(array(
+    'DBInstanceIdentifier' => 'jss-itmo444-db',
+));
+
+$endpoint = "";
+
+foreach ($result->getPath('DBInstances/*/Endpoint/Address') as $ep) {
+    // Do something with the message
+    echo "============". $ep . "================";
+    $endpoint = $ep;
+}   
 //echo "begin database";
-$link = mysqli_connect($endpoint,"root","letmein22","csironITMO444db") or die("Error " . mysqli_error($link));
+$link = mysqli_connect($endpoint,"controller","letmein1234","jss-itmo444-db") or die("Error " . mysqli_error($link));
+
 /* check connection */
 if (mysqli_connect_errno()) {
     printf("Connect failed: %s\n", mysqli_connect_error());
     exit();
 }
-$results = $link->insert_id;
+
 //below line is unsafe - $email is not checked for SQL injection -- don't do this in real life or use an ORM instead
-$link->real_query("SELECT * FROM comments WHERE email = '$email'");
+$link->real_query("SELECT * FROM items WHERE email = '$email'");
 //$link->real_query("SELECT * FROM items");
 $res = $link->use_result();
 echo "Result set order...\n";
@@ -37,3 +49,4 @@ $link->close();
 ?>
 </body>
 </html>
+

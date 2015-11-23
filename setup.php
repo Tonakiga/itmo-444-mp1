@@ -16,20 +16,20 @@ $result = $rds->createDBInstance([
     #'AutoMinorVersionUpgrade' => true || false,
     #'AvailabilityZone' => '<string>',
     #'BackupRetentionPeriod' => <integer>,
-   # 'CharacterSetName' => '<string>',
-   # 'CopyTagsToSnapshot' => true || false,
-   # 'DBClusterIdentifier' => '<string>',
+	#'CharacterSetName' => '<string>',
+	#'CopyTagsToSnapshot' => true || false,
+	#'DBClusterIdentifier' => '<string>',
     'DBInstanceClass' => 'db.t1.micro', // REQUIRED
-    'DBInstanceIdentifier' => 'jss-test-db', // REQUIRED
+    'DBInstanceIdentifier' => 'jss-itmo444-db', // REQUIRED
     'DBName' => 'jsstestdb',
     #'DBParameterGroupName' => '<string>',
     #'DBSecurityGroups' => ['<string>', ...],
     #'DBSubnetGroupName' => '<string>',
     'Engine' => 'MySQL', // REQUIRED
-   # 'EngineVersion' => '5.5.41',
+	#'EngineVersion' => '5.5.41',
     #'Iops' => <integer>,
     #'KmsKeyId' => '<string>',
-   # 'LicenseModel' => '<string>',
+	#'LicenseModel' => '<string>',
   'MasterUserPassword' => 'letmein1234',
     'MasterUsername' => 'controller',
     #'MultiAZ' => true || false,
@@ -40,41 +40,45 @@ $result = $rds->createDBInstance([
  'PubliclyAccessible' => true,
     #'StorageEncrypted' => true || false,
     #'StorageType' => '<string>',
-   # 'Tags' => [
-   #     [
-   #         'Key' => '<string>',
-   #         'Value' => '<string>',
-   #     ],
+	#'Tags' => [
+	#     [
+	#         'Key' => '<string>',
+	#         'Value' => '<string>',
+	#     ],
         // ...
-   # ],
+	# ],
     #'TdeCredentialArn' => '<string>',
     #'TdeCredentialPassword' => '<string>',
-   # 'VpcSecurityGroupIds' => ['<string>', ...],
+	#'VpcSecurityGroupIds' => ['<string>', ...],
 ]);
 print "Create RDS DB results: \n";
 # print_r($rds);
-$result = $rds->waitUntil('DBInstanceAvailable',['DBInstanceIdentifier' => 'jss-test-db',
+$result = $rds->waitUntil('DBInstanceAvailable',['DBInstanceIdentifier' => 'jss-itmo444-db',
 ]);
 // Create a table 
 $result = $rds->describeDBInstances([
-    'DBInstanceIdentifier' => 'jss-test-db',
+    'DBInstanceIdentifier' => 'jss-itmo444-db',
 ]);
 $endpoint = $result['DBInstances'][0]['Endpoint']['Address'];
 print "============\n". $endpoint . "================\n";
-$link = mysqli_connect($endpoint,"controller","letmein1234","jsstestdb") or die("Error " . mysqli_error($link));
+$link = mysqli_connect($endpoint,"controller","letmein1234","jss-itmo444-db") or die("Error " . mysqli_error($link));
 #echo "Here is the result: " . $link;
-$sql = "CREATE TABLE IF NOT EXISTS items  
+
+$sql = "DROP TABLE IF EXISTS User";
+if(!mysqli_query($link, $sql)) {
+   echo "Error : " . mysqli_error($link);
+} 
+
+$sql = "CREATE TABLE User  
 (
-    id INT NOT NULL AUTO_INCREMENT,
-    uname VARCHAR(20) NOT NULL,
-    email VARCHAR(20) NOT NULL,
-    phone VARCHAR(20) NOT NULL,
-    s3rawurl VARCHAR(256) NOT NULL,
-    s3finishedurl VARCHAR(256) NOT NULL,
-    jpgfilename VARCHAR(255) NOT NULL,
-    state TINYINT(3) NOT NULL,
-    datecolumn TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-    PRIMARY KEY(id)
+ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+username VARCHAR(20),
+useremail VARCHAR(20),
+telephone VARCHAR(20),
+raws3url VARCHAR(256),
+finisheds3url VARCHAR(256),
+filename VARCHAR(256),
+state TINYINT(3),
+datetime timestamp 
 )";
-$link->query($sql);
 ?>
