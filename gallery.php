@@ -1,52 +1,26 @@
-<html>
-<head><title>Gallery</title>
-</head>
-<body>
-
 <?php
 session_start();
 ini_set('display_errors',1); 
 error_reporting(E_ALL);
-$email = $_POST["email"];
-echo $email;
-require 'vendor/autoload.php';
-
-use Aws\Rds\RdsClient;
-$client = RdsClient::factory(array(
-'region'  => 'us-east-1'
+require '/var/www/html/vendor/autoload.php'
+$rds = new Aws\Rds\RdsClient([
+    'version' => 'latest',
+    'region'  => 'us-east-1',
+	'credentials' => [
+        'key'    => 'AKIAI37TXF3MPNO7NLWQ',
+        'secret' => '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',
+    ],
+]);
+$result = $rds->describeDBInstances(array(
+    'DBInstanceIdentifier' => 'jss-itmo444-db',	
+	'credentials' => [
+        'key'    => 'AKIAI37TXF3MPNO7NLWQ',
+        'secret' => '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',
+    ],
 ));
-
-$result = $client->describeDBInstances(array(
-    'DBInstanceIdentifier' => 'jss-itmo444-db',
-));
-
-$endpoint = "";
-
-foreach ($result->getPath('DBInstances/*/Endpoint/Address') as $ep) {
-    // Do something with the message
-    echo "============". $ep . "================";
-    $endpoint = $ep;
-}   
-//echo "begin database";
-$link = mysqli_connect($endpoint,"controller","letmein1234","jss-itmo444-db") or die("Error " . mysqli_error($link));
-
-/* check connection */
-if (mysqli_connect_errno()) {
-    printf("Connect failed: %s\n", mysqli_connect_error());
-    exit();
-}
-
-//below line is unsafe - $email is not checked for SQL injection -- don't do this in real life or use an ORM instead
-$link->real_query("SELECT * FROM items WHERE email = '$email'");
-//$link->real_query("SELECT * FROM items");
-$res = $link->use_result();
-echo "Result set order...\n";
-while ($row = $res->fetch_assoc()) {
-    echo "<img src =\" " . $row['s3rawurl'] . "\" /><img src =\"" .$row['s3finishedurl'] . "\"/>";
-echo $row['id'] . "Email: " . $row['email'];
-}
+$endpoint = $result['DBInstances'][0]['Endpoint']['Address'];
+    echo "============\n". $endpoint . "================";
+$link = mysqli_connect($endpoint,"controller","letmein1234","jss-itmo444-db");
+$link->real_query("SELECT * FROM jssUserImages");
 $link->close();
 ?>
-</body>
-</html>
-

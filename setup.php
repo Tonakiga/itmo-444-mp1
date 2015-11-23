@@ -64,12 +64,12 @@ print "============\n". $endpoint . "================\n";
 $link = mysqli_connect($endpoint,"controller","letmein1234","jss-itmo444-db") or die("Error " . mysqli_error($link));
 #echo "Here is the result: " . $link;
 
-$sql = "DROP TABLE IF EXISTS User";
+$sql = "DROP TABLE IF EXISTS jssUserImages";
 if(!mysqli_query($link, $sql)) {
    echo "Error : " . mysqli_error($link);
 } 
 
-$sql = "CREATE TABLE User  
+$sql = "CREATE TABLE jssUserImages  
 (
 ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 username VARCHAR(20),
