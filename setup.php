@@ -7,8 +7,8 @@ $rds = new Aws\Rds\RdsClient([
     'version' => 'latest',
     'region'  => 'us-east-1',
     'credentials' => [
-        'key'    => 'AKIAI37TXF3MPNO7NLWQ',
-        'secret' => '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',
+        'key'    => '',
+        'secret' => '',
     ],
 ]);
 $result = $rds->createDBInstance([
